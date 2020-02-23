@@ -37,80 +37,80 @@
 
 - (void)scan: (CDVInvokedUrlCommand*)command; 
 {
-    // if (self.scanInProgress) {
-    //     [self.commandDelegate
-    //      sendPluginResult: [CDVPluginResult
-    //                         resultWithStatus: CDVCommandStatus_ERROR
-    //                         messageAsString:@"A scan is already in progress."]
-    //      callbackId: [command callbackId]];
-    // } else {
-    //     self.scanInProgress = YES;
-    //     self.scanCallbackId = [command callbackId];
-    //     self.scanReader = [AlmaZBarReaderViewController new];
+     if (self.scanInProgress) {
+         [self.commandDelegate
+          sendPluginResult: [CDVPluginResult
+                             resultWithStatus: CDVCommandStatus_ERROR
+                             messageAsString:@"A scan is already in progress."]
+          callbackId: [command callbackId]];
+     } else {
+         self.scanInProgress = YES;
+         self.scanCallbackId = [command callbackId];
+         self.scanReader = [ZBarReaderController new];
 
-    //     self.scanReader.readerDelegate = self;
-    //    // self.scanReader.supportedOrientationsMask = ZBarOrientationMask(UIInterfaceOrientationPortrait);
+         self.scanReader.readerDelegate = self;
+        // self.scanReader.supportedOrientationsMask = ZBarOrientationMask(UIInterfaceOrientationPortrait);
 
-    //     // Get user parameters
-    //     NSDictionary *params = (NSDictionary*) [command argumentAtIndex:0];
-    //     NSString *camera = [params objectForKey:@"camera"];
-    //     if([camera isEqualToString:@"front"]) {
-    //         // We do not set any specific device for the default "back" setting,
-    //         // as not all devices will have a rear-facing camera.
-    //         self.scanReader.cameraDevice = UIImagePickerControllerCameraDeviceFront;
-    //     }
-    //     self.scanReader.cameraFlashMode = UIImagePickerControllerCameraFlashModeOn;
+         // Get user parameters
+         NSDictionary *params = (NSDictionary*) [command argumentAtIndex:0];
+         NSString *camera = [params objectForKey:@"camera"];
+         if([camera isEqualToString:@"front"]) {
+             // We do not set any specific device for the default "back" setting,
+             // as not all devices will have a rear-facing camera.
+             self.scanReader.cameraDevice = UIImagePickerControllerCameraDeviceFront;
+         }
+         self.scanReader.cameraFlashMode = UIImagePickerControllerCameraFlashModeOn;
 
-    //     NSString *flash = [params objectForKey:@"flash"];
+         NSString *flash = [params objectForKey:@"flash"];
         
-    //     if ([flash isEqualToString:@"on"]) {
-    //         self.scanReader.cameraFlashMode = UIImagePickerControllerCameraFlashModeOn;
-    //     } else if ([flash isEqualToString:@"off"]) {
-    //         self.scanReader.cameraFlashMode = UIImagePickerControllerCameraFlashModeOff;
-    //     }else if ([flash isEqualToString:@"auto"]) {
-    //         self.scanReader.cameraFlashMode = UIImagePickerControllerCameraFlashModeAuto;
-    //     }
+         if ([flash isEqualToString:@"on"]) {
+             self.scanReader.cameraFlashMode = UIImagePickerControllerCameraFlashModeOn;
+         } else if ([flash isEqualToString:@"off"]) {
+             self.scanReader.cameraFlashMode = UIImagePickerControllerCameraFlashModeOff;
+         }else if ([flash isEqualToString:@"auto"]) {
+             self.scanReader.cameraFlashMode = UIImagePickerControllerCameraFlashModeAuto;
+         }
 
-    //     // Hack to hide the bottom bar's Info button... originally based on http://stackoverflow.com/a/16353530
-    // NSInteger infoButtonIndex;
-    //     if ([[[UIDevice currentDevice] systemVersion] compare:@"10.0" options:NSNumericSearch] != NSOrderedAscending) {
-    //         infoButtonIndex = 1;
-    //     } else {
-    //         infoButtonIndex = 3;
-    //     }
-    //     UIView *infoButton = [[[[[self.scanReader.view.subviews objectAtIndex:2] subviews] objectAtIndex:0] subviews] objectAtIndex:infoButtonIndex];
-    //     [infoButton setHidden:YES];
+         // Hack to hide the bottom bar's Info button... originally based on http://stackoverflow.com/a/16353530
+     NSInteger infoButtonIndex;
+         if ([[[UIDevice currentDevice] systemVersion] compare:@"10.0" options:NSNumericSearch] != NSOrderedAscending) {
+             infoButtonIndex = 1;
+         } else {
+             infoButtonIndex = 3;
+         }
+         UIView *infoButton = [[[[[self.scanReader.view.subviews objectAtIndex:2] subviews] objectAtIndex:0] subviews] objectAtIndex:infoButtonIndex];
+         [infoButton setHidden:YES];
 
-    //     //UIButton *button = [UIButton buttonWithType:UIButtonTypeSystem]; [button setTitle:@"Press Me" forState:UIControlStateNormal]; [button sizeToFit]; [self.view addSubview:button];
-    //     CGRect screenRect = [[UIScreen mainScreen] bounds];
-    //     CGFloat screenWidth = screenRect.size.width;
-    //     CGFloat screenHeight = screenRect.size.height;
+         //UIButton *button = [UIButton buttonWithType:UIButtonTypeSystem]; [button setTitle:@"Press Me" forState:UIControlStateNormal]; [button sizeToFit]; [self.view addSubview:button];
+         CGRect screenRect = [[UIScreen mainScreen] bounds];
+         CGFloat screenWidth = screenRect.size.width;
+         CGFloat screenHeight = screenRect.size.height;
         
-    //     BOOL drawSight = [params objectForKey:@"drawSight"] ? [[params objectForKey:@"drawSight"] boolValue] : true;
-    //     UIToolbar *toolbarViewFlash = [[UIToolbar alloc] init];
+         BOOL drawSight = [params objectForKey:@"drawSight"] ? [[params objectForKey:@"drawSight"] boolValue] : true;
+         UIToolbar *toolbarViewFlash = [[UIToolbar alloc] init];
         
-    //     //The bar length it depends on the orientation
-    //     toolbarViewFlash.frame = CGRectMake(0.0, 0, (screenWidth > screenHeight ?screenWidth:screenHeight), 44.0);
-    //     toolbarViewFlash.barStyle = UIBarStyleBlackOpaque;
-    //     UIBarButtonItem *buttonFlash = [[UIBarButtonItem alloc] initWithTitle:@"Flash" style:UIBarButtonItemStyleDone target:self action:@selector(toggleflash)];
+         //The bar length it depends on the orientation
+         toolbarViewFlash.frame = CGRectMake(0.0, 0, (screenWidth > screenHeight ?screenWidth:screenHeight), 44.0);
+         toolbarViewFlash.barStyle = UIBarStyleBlackOpaque;
+         UIBarButtonItem *buttonFlash = [[UIBarButtonItem alloc] initWithTitle:@"Flash" style:UIBarButtonItemStyleDone target:self action:@selector(toggleflash)];
         
-    //     NSArray *buttons = [NSArray arrayWithObjects: buttonFlash, nil];
-    //     [toolbarViewFlash setItems:buttons animated:NO];
-    //     [self.scanReader.view addSubview:toolbarViewFlash];
+         NSArray *buttons = [NSArray arrayWithObjects: buttonFlash, nil];
+         [toolbarViewFlash setItems:buttons animated:NO];
+         [self.scanReader.view addSubview:toolbarViewFlash];
 
-    //     if (drawSight) {
-    //         CGFloat dim = screenWidth < screenHeight ? screenWidth / 1.1 : screenHeight / 1.1;
-    //         UIView *polygonView = [[UIView alloc] initWithFrame: CGRectMake  ( (screenWidth/2) - (dim/2), (screenHeight/2) - (dim/2), dim, dim)];
+         if (drawSight) {
+             CGFloat dim = screenWidth < screenHeight ? screenWidth / 1.1 : screenHeight / 1.1;
+             UIView *polygonView = [[UIView alloc] initWithFrame: CGRectMake  ( (screenWidth/2) - (dim/2), (screenHeight/2) - (dim/2), dim, dim)];
             
-    //         UIView *lineView = [[UIView alloc] initWithFrame:CGRectMake(0,dim / 2, dim, 1)];
-    //         lineView.backgroundColor = [UIColor redColor];
-    //         [polygonView addSubview:lineView];
+             UIView *lineView = [[UIView alloc] initWithFrame:CGRectMake(0,dim / 2, dim, 1)];
+             lineView.backgroundColor = [UIColor redColor];
+             [polygonView addSubview:lineView];
 
-    //         self.scanReader.cameraOverlayView = polygonView;
-    //     }
+             self.scanReader.cameraOverlayView = polygonView;
+         }
 
-    //     [self.viewController presentViewController:self.scanReader animated:YES completion:nil];
-    // }
+         [self.viewController presentViewController:self.scanReader animated:YES completion:nil];
+     }
 }
 
 - (void)toggleflash {
@@ -120,10 +120,10 @@
     if (device.torchAvailable == 1) {
         if (device.torchMode == 0) {
             [device setTorchMode:AVCaptureTorchModeOn];
-            [device setFlashMode:AVCaptureFlashModeOn];
+           // [device setFlashMode:AVCaptureFlashModeOn];
         } else {
             [device setTorchMode:AVCaptureTorchModeOff];
-            [device setFlashMode:AVCaptureFlashModeOff];
+            //[device setFlashMode:AVCaptureFlashModeOff];
         }
     }
     
@@ -138,9 +138,9 @@
 
 #pragma mark - ZBarReaderDelegate
 
-- (void) imagePickerController:(UIImagePickerController *)picker didFinishPickingImage:(UIImage *)image editingInfo:(NSDictionary *)editingInfo {
-    return;
-}
+//- (void) imagePickerController:(UIImagePickerController *)picker didFinishPickingImage:(UIImage *)image editingInfo:(NSDictionary *)editingInfo {
+//    return;
+//}
 
 - (void)imagePickerController:(UIImagePickerController*)picker didFinishPickingMediaWithInfo:(NSDictionary*)info {
     if ([self.scanReader isBeingDismissed]) {
