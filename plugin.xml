@@ -87,14 +87,12 @@
          <source-file src="ios/CsZBarTodo1.m" />
         <header-file src="ios/CsZBarTodo1.h" />
 
-      <!--   <framework src="AVFoundation.framework" />
+       <framework src="AVFoundation.framework" />
         <framework src="CoreMedia.framework" />
         <framework src="CoreVideo.framework" />
         <framework src="QuartzCore.framework" />
         <framework src="libiconv.dylib" />
         <source-file src="ios/libzbar.a" framework="true" custom="true"/>
-        <source-file src="ios/CsZBar.m" />
-        <header-file src="ios/CsZBar.h" />
         <source-file src="ios/AlmaZBarReaderViewController.m" />
         <header-file src="ios/AlmaZBarReaderViewController.h" />
         <header-file src="ios/ZBarSDK/ZBarCameraSimulator.h" />
@@ -117,9 +115,7 @@
         <header-file src="ios/ZBarSDK/zbar/Symbol.h" />
         <header-file src="ios/ZBarSDK/zbar/Video.h" />
         <header-file src="ios/ZBarSDK/zbar/Window.h" />
-
-
-        <resource-file src="ios/Resources/CsZBarScanView.xib" /> -->
+          <resource-file src="ios/Resources/CsZBarScanView.xib" /> 
     </platform>
 
 </plugin>
