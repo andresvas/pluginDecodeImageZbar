@@ -75,7 +75,7 @@
     <platform name="ios">
         <config-file target="config.xml" parent="/*">
             <feature name="CsZBarTodo1">
-                <param name="ios-package" value="CsZBar"/>
+                <param name="ios-package" value="CsZBarTodo1"/>
             </feature>
         </config-file>
 
@@ -83,6 +83,9 @@
         <config-file target="*-Info.plist" parent="NSCameraUsageDescription">
             <string>For Barcode Scanning</string>
         </config-file>
+
+         <source-file src="ios/CsZBarTodo1.m" />
+        <header-file src="ios/CsZBarTodo1.h" />
 
       <!--   <framework src="AVFoundation.framework" />
         <framework src="CoreMedia.framework" />

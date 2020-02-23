@@ -62,10 +62,6 @@ public class ZBar extends CordovaPlugin {
                 scanCallbackContext = callbackContext;
                 JSONObject params = args.optJSONObject(0);
 
-               /* Context appCtx = cordova.getActivity().getApplicationContext();
-                Intent scanIntent = new Intent(appCtx, ZBarScannerActivity.class);
-                scanIntent.putExtra(ZBarScannerActivity.EXTRA_PARAMS, params.toString());
-                cordova.startActivityForResult(this, scanIntent, SCAN_CODE);*/
             }
             return true;
         } else if (action.equals("gallery")) {
@@ -109,17 +105,13 @@ public class ZBar extends CordovaPlugin {
             SymbolSet syms = scanner.getResults();
             for (Symbol sym : syms) {
                 String data = sym.getData();
-                Toast.makeText(cordova.getActivity(), data, Toast.LENGTH_SHORT).show();
                 scanCallbackContext.success(data);
-                //consultServiceQR(data);
-                // Prevent to scan multiple qr codes
                 break;
             }
         }
         // Check wheter or not there were error while scanning the QR Code
         if (hadErrorsWhileScanning) {
-            //showQrInvalidate();
-            Toast.makeText(cordova.getActivity(), "No se pudo leeer el QR", Toast.LENGTH_SHORT).show();
+            scanCallbackContext.error("read error");
         }
     }
 
@@ -130,24 +122,7 @@ public class ZBar extends CordovaPlugin {
     @Override
     public void onActivityResult (int requestCode, int resultCode, Intent result)
     {
-        if(requestCode == SCAN_CODE) {
-            // switch(resultCode) {
-            //     case Activity.RESULT_OK:
-            //         String barcodeValue = result.getStringExtra(ZBarScannerActivity.EXTRA_QRVALUE);
-            //         scanCallbackContext.success(barcodeValue);
-            //         break;
-            //     case Activity.RESULT_CANCELED:
-            //         scanCallbackContext.error("cancelled");
-            //         break;
-            //     case ZBarScannerActivity.RESULT_ERROR:
-            //         scanCallbackContext.error("Scan failed due to an error");
-            //         break;
-            //     default:
-            //         scanCallbackContext.error("Unknown error");
-            // }
-            // isInProgress = false;
-            // scanCallbackContext = null;
-        } else if (requestCode == QR_DESDE_IMAGEN) {
+    if (requestCode == QR_DESDE_IMAGEN) {
             if (resultCode == Activity.RESULT_OK) {
                 Uri selectedImage = result.getData();
                 InputStream is;
@@ -156,17 +131,14 @@ public class ZBar extends CordovaPlugin {
                     is = cordova.getContext().getContentResolver().openInputStream(selectedImage);
                     decodeImage(is);
                 } catch (FileNotFoundException e) {
-                    Log.d("Todo1", e.getMessage());
+                    scanCallbackContext.error(e.getMessage());
                 } catch (OutOfMemoryError e) {
                     try {
-                        isError = true;
                         is = cordova.getContext().getContentResolver().openInputStream(selectedImage);
                         decodeImage(is);
                     } catch (FileNotFoundException ex) {
-                        Log.d("Todo1", e.getMessage());
                     }
                 } catch (Exception e) {
-                    Log.d("Todo1", e.getMessage());
                 }
             }
         }
