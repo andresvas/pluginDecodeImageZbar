@@ -1,4 +1,4 @@
-package org.cloudsky.cordovaPlugins;
+package org.todo1.cordovaPlugins;
 
 import org.apache.cordova.CordovaPlugin;
 import org.apache.cordova.CallbackContext;
@@ -23,7 +23,7 @@ import net.sourceforge.zbar.ImageScanner;
 import net.sourceforge.zbar.Symbol;
 import net.sourceforge.zbar.SymbolSet;
 
-import org.cloudsky.cordovaPlugins.ZBarScannerActivity;
+//import org.cloudsky.cordovaPlugins.ZBarScannerActivity;
 
 import java.io.BufferedInputStream;
 import java.io.FileNotFoundException;
@@ -62,10 +62,10 @@ public class ZBar extends CordovaPlugin {
                 scanCallbackContext = callbackContext;
                 JSONObject params = args.optJSONObject(0);
 
-                Context appCtx = cordova.getActivity().getApplicationContext();
+               /* Context appCtx = cordova.getActivity().getApplicationContext();
                 Intent scanIntent = new Intent(appCtx, ZBarScannerActivity.class);
                 scanIntent.putExtra(ZBarScannerActivity.EXTRA_PARAMS, params.toString());
-                cordova.startActivityForResult(this, scanIntent, SCAN_CODE);
+                cordova.startActivityForResult(this, scanIntent, SCAN_CODE);*/
             }
             return true;
         } else if (action.equals("gallery")) {
@@ -131,22 +131,22 @@ public class ZBar extends CordovaPlugin {
     public void onActivityResult (int requestCode, int resultCode, Intent result)
     {
         if(requestCode == SCAN_CODE) {
-            switch(resultCode) {
-                case Activity.RESULT_OK:
-                    String barcodeValue = result.getStringExtra(ZBarScannerActivity.EXTRA_QRVALUE);
-                    scanCallbackContext.success(barcodeValue);
-                    break;
-                case Activity.RESULT_CANCELED:
-                    scanCallbackContext.error("cancelled");
-                    break;
-                case ZBarScannerActivity.RESULT_ERROR:
-                    scanCallbackContext.error("Scan failed due to an error");
-                    break;
-                default:
-                    scanCallbackContext.error("Unknown error");
-            }
-            isInProgress = false;
-            scanCallbackContext = null;
+            // switch(resultCode) {
+            //     case Activity.RESULT_OK:
+            //         String barcodeValue = result.getStringExtra(ZBarScannerActivity.EXTRA_QRVALUE);
+            //         scanCallbackContext.success(barcodeValue);
+            //         break;
+            //     case Activity.RESULT_CANCELED:
+            //         scanCallbackContext.error("cancelled");
+            //         break;
+            //     case ZBarScannerActivity.RESULT_ERROR:
+            //         scanCallbackContext.error("Scan failed due to an error");
+            //         break;
+            //     default:
+            //         scanCallbackContext.error("Unknown error");
+            // }
+            // isInProgress = false;
+            // scanCallbackContext = null;
         } else if (requestCode == QR_DESDE_IMAGEN) {
             if (resultCode == Activity.RESULT_OK) {
                 Uri selectedImage = result.getData();
