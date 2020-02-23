@@ -12,8 +12,10 @@ import android.content.Intent;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Build;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.widget.Toast;
 
 import net.sourceforge.zbar.Image;
@@ -24,6 +26,7 @@ import net.sourceforge.zbar.SymbolSet;
 import org.cloudsky.cordovaPlugins.ZBarScannerActivity;
 
 import java.io.BufferedInputStream;
+import java.io.FileNotFoundException;
 import java.io.InputStream;
 
 public class ZBar extends CordovaPlugin {
@@ -145,19 +148,19 @@ public class ZBar extends CordovaPlugin {
             isInProgress = false;
             scanCallbackContext = null;
         } else if (requestCode == QR_DESDE_IMAGEN) {
-            if (resultCode == RESULT_OK) {
-                Uri selectedImage = intent.getData();
+            if (resultCode == Activity.RESULT_OK) {
+                Uri selectedImage = result.getData();
                 InputStream is;
                 try {
                     isError = false;
-                    is = getContentResolver().openInputStream(selectedImage);
+                    is = cordova.getContext().getContentResolver().openInputStream(selectedImage);
                     decodeImage(is);
                 } catch (FileNotFoundException e) {
                     Log.d("Todo1", e.getMessage());
                 } catch (OutOfMemoryError e) {
                     try {
                         isError = true;
-                        is = getContentResolver().openInputStream(selectedImage);
+                        is = cordova.getContext().getContentResolver().openInputStream(selectedImage);
                         decodeImage(is);
                     } catch (FileNotFoundException ex) {
                         Log.d("Todo1", e.getMessage());
