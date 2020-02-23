@@ -182,6 +182,7 @@
 
 
 - (void) gallery: (CDVInvokedUrlCommand*)command {
+    
     if (self.scanInProgress) {
         [self.commandDelegate
          sendPluginResult: [CDVPluginResult

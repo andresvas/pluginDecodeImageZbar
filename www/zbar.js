@@ -7,7 +7,7 @@ ZBar.prototype = {
 
     scan: function (params, success, failure)
     {
-        argscheck.checkArgs('*fF', 'CsZBar.scan', arguments);
+        argscheck.checkArgs('*fF', 'CsZBarTodo1.scan', arguments);
 
         params = params || {};
         if(params.text_title === undefined) params.text_title = "Scan QR Code";
@@ -15,12 +15,12 @@ ZBar.prototype = {
         if(params.camera != "front") params.camera = "back";
         if(params.flash != "on" && params.flash != "off") params.flash = "auto";
 
-        exec(success, failure, 'CsZBar', 'scan', [params]);
+        exec(success, failure, 'CsZBarTodo1', 'scan', [params]);
     },
 
     gallery: function (params, success, failure)
     {
-        argscheck.checkArgs('*fF', 'CsZBar.scan', arguments);
+        argscheck.checkArgs('*fF', 'CsZBarTodo1.gallery', arguments);
 
         params = params || {};
         if(params.text_title === undefined) params.text_title = "Scan QR Code";
@@ -28,7 +28,7 @@ ZBar.prototype = {
         if(params.camera != "front") params.camera = "back";
         if(params.flash != "on" && params.flash != "off") params.flash = "auto";
 
-        exec(success, failure, 'CsZBar', 'gallery', [params]);
+        exec(success, failure, 'CsZBarTodo1', 'gallery', [params]);
     },
 
 };

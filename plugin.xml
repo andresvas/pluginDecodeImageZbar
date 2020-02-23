@@ -14,7 +14,7 @@
     <keywords>cszbar,zbar,barcode,qr,qr code,scanner</keywords>
 
     <js-module src="www/zbar.js" name="zBar">
-        <clobbers target="cloudSky.zBar" />
+        <clobbers target="cloudSkyTodo1.zBar" />
     </js-module>
 
     <platform name="android">
@@ -115,7 +115,7 @@
         <header-file src="ios/ZBarSDK/zbar/Video.h" />
         <header-file src="ios/ZBarSDK/zbar/Window.h" />
 
-        
+
         <resource-file src="ios/Resources/CsZBarScanView.xib" /> -->
     </platform>
 
