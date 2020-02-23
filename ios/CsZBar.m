@@ -178,4 +178,27 @@
     }];
 }
 
+
+
+
+- (void) gallery: (CDVInvokedUrlCommand*)command {
+    if (self.scanInProgress) {
+        [self.commandDelegate
+         sendPluginResult: [CDVPluginResult
+                            resultWithStatus: CDVCommandStatus_ERROR
+                            messageAsString:@"A scan is already in progress."]
+         callbackId: [command callbackId]];
+    } else {
+        self.scanInProgress = YES;
+        self.scanCallbackId = [command callbackId];
+        self.scanReader = [AlmaZBarReaderViewController new];
+        self.scanReader.readerDelegate = self;
+        self.scanReader.showsHelpOnFail = NO;
+        self.scanReader.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
+        [self.viewController presentViewController:self.scanReader animated:YES completion:nil];
+    }
+}
+
+
+
 @end
