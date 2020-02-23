@@ -5,7 +5,7 @@
 //  Created by eCompliance on 23/01/15.
 
 #import "AlmaZBarReaderViewController.h"
-#import "CsZbar.h"
+#import "CsZBarTodo1.h"
 
 @interface AlmaZBarReaderViewController ()
 
@@ -48,8 +48,7 @@
 
 //Techedge Changes NSS fase 2
 - (void)buttonPressed: (UIButton *) button {
-    CsZBar *obj = [[CsZBar alloc] init];
-    
+    CsZBarTodo1 *obj = [[CsZBarTodo1 alloc] init];
     [obj toggleflash];
 }
 
