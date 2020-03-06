@@ -134,6 +134,7 @@ public class ZBar extends CordovaPlugin {
                     scanCallbackContext.error(e.getMessage());
                 } catch (OutOfMemoryError e) {
                     try {
+                        isError = true;
                         is = cordova.getContext().getContentResolver().openInputStream(selectedImage);
                         decodeImage(is);
                     } catch (FileNotFoundException ex) {
