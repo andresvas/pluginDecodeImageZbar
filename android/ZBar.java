@@ -48,15 +48,14 @@ public class ZBar extends CordovaPlugin {
     private boolean isError;
     public final static int QR_DESDE_IMAGEN = 8;
     private String error = "error";
-
+    private Uri selectedImageTemp;
 
 
     @Override
-    public boolean execute (String action, JSONArray args, CallbackContext callbackContext)
-            throws JSONException
-    {
-        if(action.equals("scan")) {
-            if(isInProgress) {
+    public boolean execute(String action, JSONArray args, CallbackContext callbackContext)
+            throws JSONException {
+        if (action.equals("scan")) {
+            if (isInProgress) {
                 callbackContext.error("A scan is already in progress!");
             } else {
                 isInProgress = true;
@@ -68,7 +67,7 @@ public class ZBar extends CordovaPlugin {
         } else if (action.equals("gallery")) {
             scanCallbackContext = callbackContext;
             readFromGallery();
-            return  true;
+            return true;
         } else {
             return false;
         }
@@ -79,7 +78,7 @@ public class ZBar extends CordovaPlugin {
     @TargetApi(Build.VERSION_CODES.KITKAT)
     private void readFromGallery() {
         Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI);
-        cordova.startActivityForResult(this,intent, QR_DESDE_IMAGEN);
+        cordova.startActivityForResult(this, intent, QR_DESDE_IMAGEN);
     }
 
     private void decodeImage(InputStream is) {
@@ -112,39 +111,41 @@ public class ZBar extends CordovaPlugin {
         }
         // Check wheter or not there were error while scanning the QR Code
         if (hadErrorsWhileScanning) {
-            scanCallbackContext.error(error);
+            if (isError) {
+                scanCallbackContext.error(error);
+            } else {
+                receiveImage(selectedImageTemp, true);
+            }
         }
     }
-
 
 
     // External results handler ----------------------------------------
 
     @Override
-    public void onActivityResult (int requestCode, int resultCode, Intent result)
-    {
+    public void onActivityResult(int requestCode, int resultCode, Intent result) {
         if (requestCode == QR_DESDE_IMAGEN) {
             if (resultCode == Activity.RESULT_OK) {
-                Uri selectedImage = result.getData();
-                InputStream is;
+                selectedImageTemp = result.getData();
                 try {
-                    isError = false;
-                    is = cordova.getContext().getContentResolver().openInputStream(selectedImage);
-                    decodeImage(is);
-                } catch (FileNotFoundException e) {
-                    scanCallbackContext.error(e.getMessage());
+                    receiveImage(selectedImageTemp, false);
                 } catch (OutOfMemoryError e) {
-                    try {
-                        isError = true;
-                        is = cordova.getContext().getContentResolver().openInputStream(selectedImage);
-                        decodeImage(is);
-                    } catch (FileNotFoundException ex) {
-                        scanCallbackContext.error(error);
-                    }
+                    receiveImage(selectedImageTemp, true);
                 } catch (Exception e) {
-                        scanCallbackContext.error(error);
+                    scanCallbackContext.error(error);
                 }
             }
+        }
+    }
+
+    private void receiveImage(Uri selectedImage, boolean isErrorLocal) {
+        InputStream is;
+        isError = isErrorLocal;
+        try {
+            is = cordova.getContext().getContentResolver().openInputStream(selectedImage);
+            decodeImage(is);
+        } catch (FileNotFoundException e) {
+            scanCallbackContext.error(error);
         }
     }
 }
