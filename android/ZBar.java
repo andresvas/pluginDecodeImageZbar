@@ -47,12 +47,13 @@ public class ZBar extends CordovaPlugin {
 
     private boolean isError;
     public final static int QR_DESDE_IMAGEN = 8;
+    private String error = "error";
 
 
 
     @Override
     public boolean execute (String action, JSONArray args, CallbackContext callbackContext)
-    throws JSONException
+            throws JSONException
     {
         if(action.equals("scan")) {
             if(isInProgress) {
@@ -69,8 +70,8 @@ public class ZBar extends CordovaPlugin {
             readFromGallery();
             return  true;
         } else {
-                return false;
-            }
+            return false;
+        }
 
     }
 
@@ -111,7 +112,7 @@ public class ZBar extends CordovaPlugin {
         }
         // Check wheter or not there were error while scanning the QR Code
         if (hadErrorsWhileScanning) {
-            scanCallbackContext.error("read error");
+            scanCallbackContext.error(error);
         }
     }
 
@@ -122,7 +123,7 @@ public class ZBar extends CordovaPlugin {
     @Override
     public void onActivityResult (int requestCode, int resultCode, Intent result)
     {
-    if (requestCode == QR_DESDE_IMAGEN) {
+        if (requestCode == QR_DESDE_IMAGEN) {
             if (resultCode == Activity.RESULT_OK) {
                 Uri selectedImage = result.getData();
                 InputStream is;
@@ -138,8 +139,10 @@ public class ZBar extends CordovaPlugin {
                         is = cordova.getContext().getContentResolver().openInputStream(selectedImage);
                         decodeImage(is);
                     } catch (FileNotFoundException ex) {
+                        scanCallbackContext.error(error);
                     }
                 } catch (Exception e) {
+                        scanCallbackContext.error(error);
                 }
             }
         }
