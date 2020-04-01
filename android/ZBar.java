@@ -9,13 +9,11 @@ import org.json.JSONObject;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Intent;
-import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
 import android.provider.MediaStore;
-import android.util.Log;
 import android.widget.Toast;
 
 import net.sourceforge.zbar.Image;
@@ -46,7 +44,7 @@ public class ZBar extends CordovaPlugin {
 
 
     private boolean isError;
-    public final static int QR_DESDE_IMAGEN = 8;
+    public final static int QR_DESDE_IMAGEN = 888;
     private String error = "error";
     private Uri selectedImageTemp;
 
@@ -66,7 +64,7 @@ public class ZBar extends CordovaPlugin {
             return true;
         } else if (action.equals("gallery")) {
             scanCallbackContext = callbackContext;
-            readFromGallery();
+            openAndSelectFromGallery();
             return true;
         } else {
             return false;
@@ -76,12 +74,12 @@ public class ZBar extends CordovaPlugin {
 
 
     @TargetApi(Build.VERSION_CODES.KITKAT)
-    private void readFromGallery() {
+    private void openAndSelectFromGallery() {
         Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI);
         cordova.startActivityForResult(this, intent, QR_DESDE_IMAGEN);
     }
 
-    private void decodeImage(InputStream is) {
+    private void decodeImageFromGallery(InputStream is) {
         int intArray[];
         Bitmap bMap;
         BufferedInputStream bis = new BufferedInputStream(is);
@@ -134,7 +132,11 @@ public class ZBar extends CordovaPlugin {
                 } catch (Exception e) {
                     scanCallbackContext.error(error);
                 }
+            } else {
+                Toast.makeText(cordova.getContext(), "no result correct", Toast.LENGTH_SHORT).show();
             }
+        } else {
+            Toast.makeText(cordova.getContext(), "cancel toast", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -143,7 +145,7 @@ public class ZBar extends CordovaPlugin {
         isError = isErrorLocal;
         try {
             is = cordova.getContext().getContentResolver().openInputStream(selectedImage);
-            decodeImage(is);
+            decodeImageFromGallery(is);
         } catch (FileNotFoundException e) {
             scanCallbackContext.error(error);
         }
