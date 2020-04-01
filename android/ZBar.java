@@ -136,10 +136,10 @@ public class ZBar extends CordovaPlugin {
                     scanCallbackContext.error(error);
                 }
             } else {
-                Toast.makeText(cordova.getContext(), "no result correct", Toast.LENGTH_SHORT).show();
+                Toast.makeText(cordova.getContext(), "no result correct 22", Toast.LENGTH_SHORT).show();
             }
         } else {
-            Toast.makeText(cordova.getContext(), "cancel toast", Toast.LENGTH_SHORT).show();
+            Toast.makeText(cordova.getContext(), "cancel toast 22", Toast.LENGTH_SHORT).show();
         }
     }
 
