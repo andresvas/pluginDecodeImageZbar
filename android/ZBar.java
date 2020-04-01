@@ -75,8 +75,10 @@ public class ZBar extends CordovaPlugin {
 
     @TargetApi(Build.VERSION_CODES.KITKAT)
     private void openAndSelectFromGallery() {
-        Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI);
-        cordova.startActivityForResult(this, intent, QR_DESDE_IMAGEN);
+        //Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
+        photoPickerIntent.setType("image/*");
+        cordova.startActivityForResult(this, photoPickerIntent, QR_DESDE_IMAGEN);
     }
 
     private void decodeImageFromGallery(InputStream is) {
@@ -122,10 +124,11 @@ public class ZBar extends CordovaPlugin {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent result) {
+        super.onActivityResult(requestCode, resultCode, result);
         if (requestCode == QR_DESDE_IMAGEN) {
             if (resultCode == Activity.RESULT_OK) {
-                selectedImageTemp = result.getData();
                 try {
+                    selectedImageTemp = result.getData();
                     receiveImage(selectedImageTemp, false);
                 } catch (OutOfMemoryError e) {
                     receiveImage(selectedImageTemp, true);
