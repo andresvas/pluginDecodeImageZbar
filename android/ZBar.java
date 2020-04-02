@@ -1,33 +1,30 @@
 package org.todo1.cordovaPlugins;
 
-import org.apache.cordova.CordovaPlugin;
-import org.apache.cordova.CallbackContext;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
-import android.os.Build;
-import android.provider.MediaStore;
-import android.widget.Toast;
 
 import net.sourceforge.zbar.Image;
 import net.sourceforge.zbar.ImageScanner;
 import net.sourceforge.zbar.Symbol;
 import net.sourceforge.zbar.SymbolSet;
 
-//import org.cloudsky.cordovaPlugins.ZBarScannerActivity;
+import org.apache.cordova.CallbackContext;
+import org.apache.cordova.CordovaPlugin;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.BufferedInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 
+//import org.cloudsky.cordovaPlugins.ZBarScannerActivity;
+
 public class ZBar extends CordovaPlugin {
+
 
     // Configuration ---------------------------------------------------
 
@@ -50,10 +47,11 @@ public class ZBar extends CordovaPlugin {
 
 
     @Override
-    public boolean execute(String action, JSONArray args, CallbackContext callbackContext)
-            throws JSONException {
-        if (action.equals("scan")) {
-            if (isInProgress) {
+    public boolean execute (String action, JSONArray args, CallbackContext callbackContext)
+    throws JSONException
+    {
+        if(action.equals("scan")) {
+            if(isInProgress) {
                 callbackContext.error("A scan is already in progress!");
             } else {
                 isInProgress = true;
@@ -63,28 +61,29 @@ public class ZBar extends CordovaPlugin {
             }
             return true;
         } else if (action.equals("gallery")) {
-            cordova.getThreadPool().execute(new Runnable() {
-                @Override
-                public void run() {
-                    scanCallbackContext = callbackContext;
-                    openAndSelectFromGallery();
-                }
-            });
-
-            return true;
+            scanCallbackContext = callbackContext;
+            openAndSelectFromGallery();
+            return  true;
         } else {
-            return false;
-        }
+                return false;
+            }
 
     }
 
-
-    @TargetApi(Build.VERSION_CODES.KITKAT)
     private void openAndSelectFromGallery() {
-        //Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-        Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
-        photoPickerIntent.setType("image/*");
-        cordova.startActivityForResult(this, photoPickerIntent, QR_DESDE_IMAGEN);
+        cordova.setActivityResultCallback (this);
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.addCategory(Intent.CATEGORY_DEFAULT);
+
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        intent.addCategory(Intent.CATEGORY_OPENABLE);
+
+
+        this.cordova.startActivityForResult((CordovaPlugin)this, Intent.createChooser(intent,
+               "personas"),QR_DESDE_IMAGEN);
+
+
     }
 
     private void decodeImageFromGallery(InputStream is) {
@@ -126,6 +125,7 @@ public class ZBar extends CordovaPlugin {
     }
 
 
+
     // External results handler ----------------------------------------
 
     @Override
@@ -141,8 +141,6 @@ public class ZBar extends CordovaPlugin {
                 } catch (Exception e) {
                     scanCallbackContext.error(error);
                 }
-            } else {
-                Toast.makeText(cordova.getContext(), "no result correct", Toast.LENGTH_SHORT).show();
             }
         }
     }
