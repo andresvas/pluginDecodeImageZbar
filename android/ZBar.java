@@ -63,8 +63,14 @@ public class ZBar extends CordovaPlugin {
             }
             return true;
         } else if (action.equals("gallery")) {
-            scanCallbackContext = callbackContext;
-            openAndSelectFromGallery();
+            cordova.getThreadPool().execute(new Runnable() {
+                @Override
+                public void run() {
+                    scanCallbackContext = callbackContext;
+                    openAndSelectFromGallery();
+                }
+            });
+
             return true;
         } else {
             return false;
@@ -136,10 +142,8 @@ public class ZBar extends CordovaPlugin {
                     scanCallbackContext.error(error);
                 }
             } else {
-                Toast.makeText(cordova.getContext(), "no result correct 22", Toast.LENGTH_SHORT).show();
+                Toast.makeText(cordova.getContext(), "no result correct", Toast.LENGTH_SHORT).show();
             }
-        } else {
-            Toast.makeText(cordova.getContext(), "cancel toast 22", Toast.LENGTH_SHORT).show();
         }
     }
 
