@@ -81,7 +81,7 @@
 
         <!-- Declare Camera Usage for iOS10+ -->
         <config-file target="*-Info.plist" parent="NSCameraUsageDescription">
-            <string>For Barcode Scanning</string>
+            <string>Para leer códigos QR debes habilitar el permiso en la aplicación.</string>
         </config-file>
 
          <source-file src="ios/CsZBarTodo1.m" />
